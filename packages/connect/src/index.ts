@@ -1,35 +1,11 @@
 import { App, router } from './lib';
 import { createApp, provide, inject } from 'vue';
-
-export interface Wallet {
-	readonly name: string;
-	call(): string;
-}
-
-/**
- * The request arguments interface
- */
-export interface RequestArguments {
-	readonly method: string;
-	readonly params?: readonly any[] | object;
-}
-
-export type EventType = string | symbol;
-
-export type Listener = (...args: Array<any>) => void;
-
-/**
- * EIP1193 compatible provider interface
- */
-export interface Provider {
-	request(args: RequestArguments): Promise<any>;
-	on(eventName: EventType, listener: Listener): this;
-	removeListener(eventName: EventType, listener: Listener): this;
-}
+import { Wallet } from '@web3connect.js/wallet';
 
 export class Web3Connect {
 	private wallets: Array<Wallet>;
 	private containerOrSelector: Element | string;
+	private mounted: boolean = false;
 
 	constructor(
 		containerOrSelector: Element | string,
@@ -43,7 +19,10 @@ export class Web3Connect {
 	 * Show web3 provider facade ui
 	 */
 	async connect() {
-		createApp(App).use(router).mount(this.containerOrSelector);
+		if (!this.mounted) {
+			createApp(App).use(router).mount(this.containerOrSelector);
+			this.mounted = true;
+		}
 	}
 }
 

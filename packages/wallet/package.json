@@ -1,0 +1,15 @@
+{
+	"name": "@web3connect.js/wallet",
+	"version": "1.0.0",
+	"type": "commonjs",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"install": "tsc",
+		"test": "mocha"
+	},
+	"devDependencies": {
+		"@types/node": "^14.14.41"
+	},
+	"dependencies": {}
+}

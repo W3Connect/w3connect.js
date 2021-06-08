@@ -1,5 +1,7 @@
 <template>
-	<div class="web3-provider nav" @click="click">test {{ readersNumber }}</div>
+	<teleport to="body">
+		<router-view></router-view>
+	</teleport>
 </template>
 
 <script lang="ts">

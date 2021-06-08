@@ -1,5 +1,5 @@
 {
-	"name": "@web3provider.js/ui",
+	"name": "web3connect.js",
 	"version": "0.0.0",
 	"files": [
 		"dist"
@@ -16,11 +16,13 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vue-tsc -noEmit && vite build && tsc --project tsconfig.dec.json && node ./script/post-build.js",
-		"serve": "vite preview"
+		"serve": "vite preview",
+		"install": "yarn run build"
 	},
 	"dependencies": {
 		"vue": "^3.0.5",
-		"vue-router": "^4.0.4"
+		"vue-router": "^4.0.4",
+		"@web3connect.js/wallet": "1.0.0"
 	},
 	"devDependencies": {
 		"@types/node": "^14.14.41",

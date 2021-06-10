@@ -1,9 +1,146 @@
-.web3-provider {
+#w3c-modal {
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
 	position: absolute;
-	z-index: 1;
-	background: rgba(0, 0, 0, 0.4);
+	z-index: 100;
+	background: rgba(80, 80, 80, 0.226);
+	display: flex;
+	align-content: center;
+	align-items: center;
+	backdrop-filter: blur(2px);
+}
+
+#w3c-dialog {
+	background: #ffffff;
+	margin: auto;
+	border-radius: 8px;
+	box-shadow: rgb(50 50 93 / 11%) 0px 4px 6px 0px,
+		rgb(0 0 0 / 8%) 0px 1px 3px 0px, rgb(0 0 0 / 6%) 0px 0px 1px 0px inset;
+}
+
+.w3c-water-fall {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(calc(50% - 10px), 1fr));
+	column-gap: 2px;
+	row-gap: 0px;
+	width: 800px;
+	min-height: 600px;
+	max-height: 90%;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.w3c-water-fall-item {
+	width: 100%;
+	min-height: 160px;
+	border: 1px solid rgba(195, 195, 195, 0.14);
+}
+
+@media (max-width: 900px) {
+	.w3c-water-fall {
+		width: 90%;
+		height: 90%;
+		min-height: 0px;
+		grid-template-columns: 1fr;
+	}
+
+	.w3c-water-fall-item {
+		width: 100%;
+	}
+}
+
+.w3c-menu {
+	width: calc(100% - 20px);
+	height: calc(100% - 20px);
+	transition: all 0.2s linear;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.w3c-menu:hover {
+	background: #f7f7f7;
+}
+
+.w3c-modal-enter-active,
+.w3c-modal-leave-active {
+	transition: all 0.2s ease-out;
+}
+
+.w3c-modal-enter-from {
+	opacity: 0.1;
+}
+
+.w3c-modal-leave-to {
+	opacity: 0;
+}
+
+.w3c-dialog-enter-active,
+.w3c-dialog-leave-active {
+	transition: all 0.2s ease-out;
+}
+
+.w3c-dialog-enter-from {
+	opacity: 0.1;
+	transform: translateY(100%);
+}
+
+.w3c-dialog-leave-to {
+	opacity: 0;
+	transform: translateY(100%);
+}
+
+.w3c-menu-title {
+	font-size: 24px;
+	font-weight: 400;
+	margin-top: 20px;
+	line-height: 100%;
+	color: rgb(12, 12, 13);
+}
+
+.w3c-menu-description {
+	width: 100%;
+	font-size: 18px;
+	margin-top: 10px;
+	color: rgb(169, 169, 188);
+	text-align: center;
+}
+
+@media (max-width: 40em) {
+	.w3c-menu-title {
+		font-size: 5vw;
+	}
+
+	.w3c-menu-description {
+		font-size: 4vw;
+	}
+}
+
+.w3c-menu-icon {
+	width: 100%;
+	height: 30%;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.w3c-menu-metamask-icon {
+	background-image: url('./img/metamask.svg');
+}
+
+.w3c-menu-fortmatic-icon {
+	background-image: url('./img/fortmatic.svg');
+}
+
+.w3c-menu-torus-icon {
+	background-image: url('./img/forus.svg');
+}
+
+.w3c-menu-walletconnect-icon {
+	background-image: url('./img/walletconnect.svg');
 }

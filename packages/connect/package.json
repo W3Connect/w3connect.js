@@ -15,14 +15,13 @@
 	},
 	"scripts": {
 		"dev": "vite",
-		"build": "vue-tsc -noEmit && vite build && tsc --project tsconfig.dec.json && node ./script/post-build.js",
-		"serve": "vite preview",
-		"install": "yarn run build"
+		"build": "vue-tsc -noEmit && vite build && tsc --project tsconfig.dec.json",
+		"serve": "vite preview"
 	},
 	"dependencies": {
 		"vue": "^3.0.5",
 		"vue-router": "^4.0.4",
-		"@web3connect.js/wallet": "1.0.0"
+		"@w3connect.js/wallet": "1.0.0"
 	},
 	"devDependencies": {
 		"@types/node": "^14.14.41",

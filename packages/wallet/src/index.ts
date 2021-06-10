@@ -28,7 +28,12 @@ export interface Wallet {
 	/**
 	 * Wallet id name
 	 */
-	name: string;
+	readonly name: string;
+
+	/**
+	 * Wallet description
+	 */
+	readonly description: string;
 	/**
 	 * Connect wallet and return EIP1193 compatible provider interface
 	 */

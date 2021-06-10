@@ -1,19 +1,52 @@
 <template>
 	<div id="show-button" @click="click">Test connect</div>
-	<div id="web3connect"></div>
 </template>
 
 <script lang="ts">
+import { Provider, Wallet } from '@w3connect.js/wallet';
 import { defineComponent } from 'vue';
-import { provideWeb3Connect } from '../';
+import { makeConnect } from '../';
+
+function sampleWallet(): Wallet[] {
+	return [
+		{
+			name: 'WalletConnect',
+			description: 'Scan with WalletConnect to connect',
+			connect: async () => {
+				return {} as Provider;
+			},
+		},
+		{
+			name: 'Metamask',
+			description: 'Connect to you MetaMask wallet',
+			connect: async () => {
+				return {} as Provider;
+			},
+		},
+		{
+			name: 'Torus',
+			description: 'Connect to you Torus account',
+			connect: async () => {
+				return {} as Provider;
+			},
+		},
+		{
+			name: 'Fortmatic',
+			description: 'Connect to you Fortmatic account',
+			connect: async () => {
+				return {} as Provider;
+			},
+		},
+	];
+}
 
 export default defineComponent({
 	name: 'App',
 	setup() {
-		const web3Connect = provideWeb3Connect('#w3c');
+		const connect = makeConnect('#w3c', ...sampleWallet());
 
 		const click = async () => {
-			await web3Connect.connect();
+			await connect.connect();
 		};
 
 		return {
@@ -47,6 +80,7 @@ export default defineComponent({
 	cursor: pointer;
 	text-align: center;
 	line-height: 30px;
+	user-select: none;
 }
 
 #app {
@@ -55,5 +89,15 @@ export default defineComponent({
 	-moz-osx-font-smoothing: grayscale;
 	width: 100%;
 	min-height: 100vh;
+	display: flex;
+	align-content: center;
+	align-items: center;
+}
+
+html,
+body {
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
 }
 </style>

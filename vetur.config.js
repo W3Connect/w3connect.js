@@ -6,7 +6,7 @@ module.exports = {
   },
   projects: [
     {
-      root: "./packages/ui",
+      root: "./packages/connect",
       tsconfig: "./tsconfig.json",
     },
   ],

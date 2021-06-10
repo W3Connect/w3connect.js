@@ -2,6 +2,7 @@
   "private": true,
   "workspaces": {
     "packages": [
+      "packages/wallet",
       "packages/*"
     ],
     "nohoist": []
@@ -9,6 +10,6 @@
   "version": "0.0.0",
   "scripts": {
     "test": "yarn workspaces run test",
-    "install": "yarn workspaces run install"
+    "build": "yarn workspaces run build"
   }
 }

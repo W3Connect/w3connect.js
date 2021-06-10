@@ -1,11 +1,11 @@
 {
-	"name": "@web3connect.js/wallet",
+	"name": "@w3connect.js/wallet",
 	"version": "1.0.0",
 	"type": "commonjs",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"install": "tsc",
+		"build": "tsc",
 		"test": "mocha"
 	},
 	"devDependencies": {

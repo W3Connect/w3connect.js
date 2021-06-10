@@ -1,24 +1,103 @@
 <template>
 	<teleport to="body">
-		<router-view></router-view>
+		<transition name="w3c-modal">
+			<div id="w3c-modal" @click.self="click" v-if="modal">
+				<transition name="w3c-dialog">
+					<div id="w3c-dialog" class="w3c-water-fall" v-if="dialog">
+						<div
+							v-for="wallet in wallets"
+							:key="wallet.name"
+							class="w3c-water-fall-item"
+						>
+							<div class="w3c-menu" @click="clickMenu(wallet)">
+								<div
+									class="w3c-menu-icon"
+									:class="icon(wallet)"
+								></div>
+								<a class="w3c-menu-title">{{ wallet.name }}</a>
+								<a class="w3c-menu-description">
+									{{ wallet.description }}
+								</a>
+							</div>
+						</div>
+					</div>
+				</transition>
+			</div>
+		</transition>
 	</teleport>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import {
+	defineComponent,
+	ref,
+	WritableComputedRef,
+	computed,
+	Ref,
+	nextTick,
+} from 'vue';
+import { useWeb3Connect, Web3VueConnect } from './connect';
+import { Wallet } from '@w3connect.js/wallet';
+
+function useDelayShowing(connect: Web3VueConnect): {
+	modal: WritableComputedRef<boolean>;
+	dialog: Ref<boolean>;
+} {
+	const dialog = ref(false);
+	const modal = computed({
+		get: () => {
+			if (connect.showing.value) {
+				nextTick(() => {
+					dialog.value = true;
+				});
+			}
+			return connect.showing.value;
+		},
+		set: value => {
+			if (!value) {
+				dialog.value = false;
+				nextTick(() => {
+					connect.showing.value = false;
+				});
+			}
+		},
+	});
+
+	return {
+		modal,
+		dialog,
+	};
+}
 
 export default defineComponent({
-	name: 'Sample',
+	name: 'W3Connect',
 	setup() {
+		const connect = useWeb3Connect() as Web3VueConnect;
+
+		const { modal, dialog } = useDelayShowing(connect);
+
+		const wallets = connect.wallets;
+
 		const click = async () => {
-			console.log('test');
+			modal.value = false;
 		};
 
-		const readersNumber = ref(0);
+		const clickMenu = async (wallet: Wallet) => {
+			await connect.connectTo(wallet);
+			modal.value = false;
+		};
+
+		const icon = (wallet: Wallet) => {
+			return `w3c-menu-${wallet.name.toLowerCase()}-icon`;
+		};
 
 		return {
 			click,
-			readersNumber,
+			modal,
+			wallets,
+			dialog,
+			icon,
+			clickMenu,
 		};
 	},
 });

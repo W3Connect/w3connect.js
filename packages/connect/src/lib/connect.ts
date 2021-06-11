@@ -9,6 +9,7 @@ export interface Web3VueConnect extends Web3Connect {
 	readonly wallets: Ref<Array<Wallet>>;
 	readonly showing: Ref<boolean>;
 	connectTo(wallet: Wallet): Promise<void>;
+	cancel(): Promise<void>;
 }
 
 let globalConnect: Web3Connect | undefined;

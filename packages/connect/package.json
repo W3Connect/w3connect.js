@@ -7,21 +7,17 @@
 	"main": "./dist/ui.cjs.js",
 	"module": "./dist/ui.es.js",
 	"types": "./dist/index.d.ts",
-	"exports": {
-		".": {
-			"import": "./dist/ui.es.js",
-			"require": "./dist/ui.cjs.js"
-		}
-	},
 	"scripts": {
 		"dev": "vite",
 		"build": "vue-tsc -noEmit && vite build && tsc --project tsconfig.dec.json",
 		"serve": "vite preview"
 	},
 	"dependencies": {
+		"@w3connect.js/wallet": "1.0.0",
+		"@w3connect.js/wallet-metamask": "1.0.0",
+		"ethers": "^5.3.1",
 		"vue": "^3.0.5",
-		"vue-router": "^4.0.4",
-		"@w3connect.js/wallet": "1.0.0"
+		"vue-router": "^4.0.4"
 	},
 	"devDependencies": {
 		"@types/node": "^14.14.41",

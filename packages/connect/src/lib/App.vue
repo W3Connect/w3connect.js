@@ -79,11 +79,19 @@ export default defineComponent({
 		const wallets = connect.wallets;
 
 		const click = async () => {
+			await connect.cancel();
 			modal.value = false;
 		};
 
 		const clickMenu = async (wallet: Wallet) => {
-			await connect.connectTo(wallet);
+			try {
+				await connect.connectTo(wallet);
+			} catch (error) {
+				console.error(
+					'The implement must ensure connectTo never throw error',
+				);
+			}
+
 			modal.value = false;
 		};
 

@@ -10,6 +10,10 @@ class Web3ConnectImpl implements Web3VueConnect {
 
 	private _showing: Ref<boolean>;
 
+	private resolve?: (value: Provider | PromiseLike<Provider>) => void;
+
+	private reject?: (reason?: any) => void;
+
 	constructor(
 		containerOrSelector: Element | string,
 		...wallets: Array<Wallet>
@@ -30,11 +34,29 @@ class Web3ConnectImpl implements Web3VueConnect {
 
 		this._showing.value = true;
 
-		return {} as Provider;
+		return new Promise<Provider>((resolve, reject) => {
+			this.reject = reject;
+			this.resolve = resolve;
+		});
 	}
 
 	async connectTo(wallet: Wallet): Promise<void> {
-		await wallet.connect();
+		try {
+			const provider = await wallet.connect();
+			if (this.resolve) {
+				this.resolve(provider);
+			}
+		} catch (error) {
+			if (this.reject) {
+				this.reject(error);
+			}
+		}
+	}
+
+	async cancel(): Promise<void> {
+		if (this.reject) {
+			this.reject(new Error('User cancel'));
+		}
 	}
 
 	public get showing() {

@@ -128,19 +128,3 @@
 	background-repeat: no-repeat;
 	background-position: center;
 }
-
-.w3c-menu-metamask-icon {
-	background-image: url('./img/metamask.svg');
-}
-
-.w3c-menu-fortmatic-icon {
-	background-image: url('./img/fortmatic.svg');
-}
-
-.w3c-menu-torus-icon {
-	background-image: url('./img/forus.svg');
-}
-
-.w3c-menu-walletconnect-icon {
-	background-image: url('./img/walletconnect.svg');
-}

@@ -38,4 +38,9 @@ export interface Wallet {
 	 * Connect wallet and return EIP1193 compatible provider interface
 	 */
 	connect(): Promise<Provider>;
+
+	/**
+	 * The connect call this function to detech wallet status.
+	 */
+	isValid?: () => Promise<boolean>;
 }

@@ -1,43 +1,30 @@
 <template>
-	<div id="show-button" @click="click">Test connect</div>
+	<div id="sample">
+		<div id="header">
+			<div id="address" v-if="connected">
+				Connect to <a>'{{ network }}' </a> with address
+				<a>'{{ address }}'</a>
+			</div>
+		</div>
+
+		<div id="content">
+			<div id="title">Test Web3Connect.js</div>
+			<button id="show-button" @click="click">
+				{{ buttonText }}
+			</button>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
 import { Provider, Wallet } from '@w3connect.js/wallet';
-import { defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { makeConnect } from '../';
+import { MetamaskWallet } from '@w3connect.js/wallet-metamask';
+import { ethers } from 'ethers';
 
 function sampleWallet(): Wallet[] {
-	return [
-		{
-			name: 'WalletConnect',
-			description: 'Scan with WalletConnect to connect',
-			connect: async () => {
-				return {} as Provider;
-			},
-		},
-		{
-			name: 'Metamask',
-			description: 'Connect to you MetaMask wallet',
-			connect: async () => {
-				return {} as Provider;
-			},
-		},
-		{
-			name: 'Torus',
-			description: 'Connect to you Torus account',
-			connect: async () => {
-				return {} as Provider;
-			},
-		},
-		{
-			name: 'Fortmatic',
-			description: 'Connect to you Fortmatic account',
-			connect: async () => {
-				return {} as Provider;
-			},
-		},
-	];
+	return [new MetamaskWallet()];
 }
 
 export default defineComponent({
@@ -45,20 +32,76 @@ export default defineComponent({
 	setup() {
 		const connect = makeConnect('#w3c', ...sampleWallet());
 
+		const disabled = ref(false);
+
+		const address = ref('');
+
+		const network = ref('');
+
+		const connected = computed(() => {
+			return address.value != '';
+		});
+
+		const buttonText = computed(() => {
+			if (connected.value) {
+				return 'Disconnect';
+			} else {
+				return 'Connect';
+			}
+		});
+
 		const click = async () => {
-			await connect.connect();
+			if (connected.value) {
+				address.value = '';
+				return;
+			}
+
+			disabled.value = true;
+			try {
+				const provider = await connect.connect();
+
+				const client = new ethers.providers.Web3Provider(provider);
+
+				const accounts = (await provider.request({
+					method: 'eth_requestAccounts',
+				})) as string[];
+
+				address.value = accounts[0];
+
+				const detectedNetwork = await client.detectNetwork();
+
+				network.value = `${detectedNetwork.name}(${detectedNetwork.chainId})`;
+			} catch (error) {
+				console.info(error);
+			}
+
+			disabled.value = false;
 		};
 
 		return {
 			click,
+			disabled,
+			address,
+			buttonText,
+			connected,
+			network,
 		};
 	},
 });
 </script>
 
 <style>
+#sample {
+	margin: 10px;
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: column;
+	align-items: center;
+	height: 100%;
+	justify-content: center;
+}
+
 #show-button {
-	margin: 0 auto;
 	transition: all 0.15s ease-in-out 0s;
 	position: relative;
 	background-image: none;
@@ -75,7 +118,6 @@ export default defineComponent({
 	font-weight: 600;
 	height: 48px;
 	width: 200px;
-	margin: 0px auto;
 	padding: 8px 12px;
 	cursor: pointer;
 	text-align: center;
@@ -83,15 +125,63 @@ export default defineComponent({
 	user-select: none;
 }
 
+#show-button[disabled] {
+	background-color: rgba(64, 153, 255, 0.521);
+	pointer-events: none;
+}
+
+#header {
+	height: 40px;
+}
+
+#title {
+	margin: 40px;
+	height: fit-content;
+	font-weight: bolder;
+	font-size: 40px;
+}
+
+#address {
+	margin-top: 20px;
+	height: fit-content;
+	font-weight: lighter;
+	font-size: 12px;
+}
+
+#address > a {
+	font-weight: bolder;
+	font-size: 16px;
+}
+
+@media (max-width: 40em) {
+	#address {
+		font-size: 1vw;
+	}
+
+	#address > a {
+		font-size: 2vw;
+	}
+
+	#title {
+		font-size: 6vw;
+	}
+}
+
+#content {
+	margin: auto;
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
 #app {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	width: 100%;
-	min-height: 100vh;
-	display: flex;
-	align-content: center;
-	align-items: center;
+	height: 100vh;
 }
 
 html,

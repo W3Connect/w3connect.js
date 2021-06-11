@@ -36,7 +36,7 @@ const defaultNodes = [
 		chainId: 1,
 	},
 	{
-		key: 'pk_live_9381E04748181462',
+		key: 'pk_test_E4E0FA39FEA7A45C',
 		chainId: 3,
 	},
 ];
@@ -132,10 +132,10 @@ export class FortmaticWallet implements Wallet {
 	}
 
 	get name(): string {
-		return __('fortmatic-name');
+		return 'Fortmatic';
 	}
 
 	get description(): string {
-		return __('fortmatic-description');
+		return 'Connect to your fortmatic wallet';
 	}
 }

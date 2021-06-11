@@ -23,11 +23,11 @@ export class MetamaskWallet implements Wallet {
   }
 
   get name(): string {
-    return __("metamask-name");
+    return "MetaMask";
   }
 
   get description(): string {
-    return __("metamask-description");
+    return "Connect to you MetaMask wallet";
   }
 
   async supportChain(chainId: number): Promise<boolean> {

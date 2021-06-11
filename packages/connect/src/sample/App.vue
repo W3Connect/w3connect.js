@@ -20,29 +20,9 @@
 import { Provider, Wallet } from '@w3connect.js/wallet';
 import { computed, defineComponent, ref } from 'vue';
 import { makeConnect } from '../';
-import { MetamaskWallet } from '@w3connect.js/wallet-metamask';
+import { MetamaskWallet } from '@w3connect.js/metamask';
 import { FortmaticWallet } from '@w3connect.js/fortmatic';
 import { ethers } from 'ethers';
-
-import i18n from 'i18n-for-browser';
-
-i18n.configure({
-	locales: {
-		en: {
-			'fortmatic-name': 'Fortmatic',
-			'fortmatic-description': 'Connect to your fortmatic wallet',
-			'metamask-name': 'MetaMask',
-			'metamask-description': 'Connect to you MetaMask wallet',
-		},
-		'zh-CN': {
-			'fortmatic-name': 'Fortmatic',
-			'fortmatic-description': '点击连接你的 fortmatic 钱包',
-			'metamask-name': 'MetaMask',
-			'metamask-description': '点击连接你的MetaMask钱包',
-		},
-	},
-	defaultLocale: navigator.language,
-});
 
 function sampleWallet(): Wallet[] {
 	return [new MetamaskWallet(), new FortmaticWallet()];
@@ -80,7 +60,7 @@ export default defineComponent({
 
 			disabled.value = true;
 			try {
-				const provider = await connect.connect();
+				const provider = await connect.connect(3);
 
 				const client = new ethers.providers.Web3Provider(provider);
 

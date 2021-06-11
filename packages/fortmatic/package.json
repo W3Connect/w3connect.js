@@ -18,7 +18,6 @@
 	},
 	"dependencies": {
 		"@w3connect.js/wallet": "1.0.0",
-		"fortmatic": "^2.2.1",
-		"i18n-for-browser": "^3.0.0"
+		"fortmatic": "^2.2.1"
 	}
 }

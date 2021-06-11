@@ -6,7 +6,7 @@
 					<div id="w3c-dialog" class="w3c-water-fall" v-if="dialog">
 						<div
 							v-for="wallet in wallets"
-							:key="wallet.name"
+							:key="wallet"
 							class="w3c-water-fall-item"
 						>
 							<div class="w3c-menu" @click="clickMenu(wallet)">

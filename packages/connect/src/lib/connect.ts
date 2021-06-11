@@ -2,11 +2,12 @@ import { Provider, Wallet } from '@w3connect.js/wallet';
 import { Ref } from 'vue';
 
 export interface Web3Connect {
-	connect(): Promise<Provider>;
+	connect(chainId?: number): Promise<Provider>;
+	disconnect(): Promise<void>;
 }
 
 export interface Web3VueConnect extends Web3Connect {
-	readonly wallets: Ref<Array<Wallet>>;
+	readonly wallets: Array<Wallet>;
 	readonly showing: Ref<boolean>;
 	connectTo(wallet: Wallet): Promise<void>;
 	cancel(): Promise<void>;

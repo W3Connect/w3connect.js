@@ -13,9 +13,12 @@
 		"serve": "vite preview"
 	},
 	"dependencies": {
+		"@w3connect.js/fortmatic": "1.0.0",
 		"@w3connect.js/wallet": "1.0.0",
 		"@w3connect.js/wallet-metamask": "1.0.0",
+		"@w3connect.js/walletconnect": "1.0.0",
 		"ethers": "^5.3.1",
+		"i18n-for-browser": "^3.0.0",
 		"vue": "^3.0.5",
 		"vue-router": "^4.0.4"
 	},

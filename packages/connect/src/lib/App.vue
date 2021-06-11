@@ -85,14 +85,13 @@ export default defineComponent({
 
 		const clickMenu = async (wallet: Wallet) => {
 			try {
+				modal.value = false;
 				await connect.connectTo(wallet);
 			} catch (error) {
 				console.error(
 					'The implement must ensure connectTo never throw error',
 				);
 			}
-
-			modal.value = false;
 		};
 
 		const icon = (wallet: Wallet) => {

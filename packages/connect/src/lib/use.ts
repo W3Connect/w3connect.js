@@ -4,7 +4,7 @@ import { Web3VueConnect, Web3Connect, provide } from './connect';
 import App from './App.vue';
 
 class Web3ConnectImpl implements Web3VueConnect {
-	private _wallets: Ref<Array<Wallet>>;
+	private _wallets: Array<Wallet>;
 	private containerOrSelector: Element | string;
 	private mounted: boolean = false;
 
@@ -14,11 +14,15 @@ class Web3ConnectImpl implements Web3VueConnect {
 
 	private reject?: (reason?: any) => void;
 
+	private currentWallet?: Wallet;
+
+	private chainId?: number;
+
 	constructor(
 		containerOrSelector: Element | string,
 		...wallets: Array<Wallet>
 	) {
-		this._wallets = ref(wallets);
+		this._wallets = wallets;
 		this.containerOrSelector = containerOrSelector;
 		this._showing = ref(false);
 	}
@@ -26,11 +30,13 @@ class Web3ConnectImpl implements Web3VueConnect {
 	/**
 	 * Show web3 provider facade ui
 	 */
-	async connect(): Promise<Provider> {
+	async connect(chainId: number = 1): Promise<Provider> {
 		if (!this.mounted) {
 			createApp(App).mount(this.containerOrSelector);
 			this.mounted = true;
 		}
+
+		this.chainId = chainId;
 
 		this._showing.value = true;
 
@@ -42,7 +48,8 @@ class Web3ConnectImpl implements Web3VueConnect {
 
 	async connectTo(wallet: Wallet): Promise<void> {
 		try {
-			const provider = await wallet.connect();
+			const provider = await wallet.connect(this.chainId);
+			this.currentWallet = wallet;
 			if (this.resolve) {
 				this.resolve(provider);
 			}
@@ -50,6 +57,12 @@ class Web3ConnectImpl implements Web3VueConnect {
 			if (this.reject) {
 				this.reject(error);
 			}
+		}
+	}
+
+	async disconnect(): Promise<void> {
+		if (this.currentWallet) {
+			await this.currentWallet.disconnect();
 		}
 	}
 

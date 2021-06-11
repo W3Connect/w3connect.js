@@ -45,10 +45,7 @@ i18n.configure({
 });
 
 function sampleWallet(): Wallet[] {
-	return [
-		new MetamaskWallet(),
-		new FortmaticWallet('pk_live_9381E04748181462'),
-	];
+	return [new MetamaskWallet(), new FortmaticWallet()];
 }
 
 export default defineComponent({

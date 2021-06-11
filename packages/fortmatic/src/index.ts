@@ -14,17 +14,29 @@ import { EventEmitter } from 'events';
 import { __ } from 'i18n-for-browser';
 
 export interface Node {
-	rpcUrl: string;
+	key: string;
+	name?: string;
+	rpcUrl?: string;
 	chainId: number;
+}
+
+function option(
+	node: Node,
+): string | { rpcUrl: String; chainId?: number } | undefined {
+	if (node.rpcUrl) {
+		return { rpcUrl: node.rpcUrl, chainId: node.chainId };
+	} else {
+		return node.name;
+	}
 }
 
 const defaultNodes = [
 	{
-		rpcUrl: 'https://alpha.ethereum.matic.network',
+		key: 'pk_live_9381E04748181462',
 		chainId: 1,
 	},
 	{
-		rpcUrl: 'https://testnet2.matic.network',
+		key: 'pk_live_9381E04748181462',
 		chainId: 3,
 	},
 ];
@@ -77,14 +89,11 @@ class WrappedProvider extends EventEmitter implements Provider {
 }
 
 export class FortmaticWallet implements Wallet {
-	private key: string;
-
 	private nodes: Node[];
 
 	private wrappedProvider: WrappedProvider;
 
-	constructor(key: string, nodes: Array<Node> = defaultNodes) {
-		this.key = key;
+	constructor(nodes: Array<Node> = defaultNodes) {
 		this.nodes = nodes;
 		this.wrappedProvider = new WrappedProvider();
 	}
@@ -98,7 +107,10 @@ export class FortmaticWallet implements Wallet {
 			throw new Error(`Unsupport chain(${chainId})`);
 		}
 
-		const provider = new Fortmatic(this.key).getProvider();
+		const provider = new (Fortmatic as any)(
+			node.key,
+			option(node),
+		).getProvider();
 
 		const accounts = await provider.enable();
 
@@ -110,6 +122,14 @@ export class FortmaticWallet implements Wallet {
 	}
 
 	async disconnect(): Promise<void> {}
+
+	async supportChain(chainId: number): Promise<boolean> {
+		const node = this.nodes.find(item => {
+			return item.chainId == chainId;
+		});
+
+		return node != undefined;
+	}
 
 	get name(): string {
 		return __('fortmatic-name');

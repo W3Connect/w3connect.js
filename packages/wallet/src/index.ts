@@ -40,12 +40,13 @@ export interface Wallet {
 	connect(chainId?: number): Promise<Provider>;
 
 	/**
-	 * The connect call this function to detech wallet status.
-	 */
-	isValid?: () => Promise<boolean>;
-
-	/**
 	 * Disconnect from wallet
 	 */
 	disconnect(): Promise<void>;
+
+	/**
+	 * Check wallet if support special chain using chainId
+	 * @param chainId The test chainId
+	 */
+	supportChain(chainId: number): Promise<boolean>;
 }

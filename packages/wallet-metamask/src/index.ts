@@ -30,6 +30,10 @@ export class MetamaskWallet implements Wallet {
     return __("metamask-description");
   }
 
+  async supportChain(chainId: number): Promise<boolean> {
+    return true;
+  }
+
   async isValid(): Promise<boolean> {
     if (this.provider) {
       return true;

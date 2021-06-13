@@ -98,7 +98,7 @@ export class FortmaticWallet implements Wallet {
 		this.wrappedProvider = new WrappedProvider();
 	}
 
-	async connect(chainId: number = 1): Promise<Provider> {
+	async connectTo(chainId: number = 1): Promise<Provider> {
 		const node = this.nodes.find(item => {
 			return item.chainId == chainId;
 		});
@@ -123,7 +123,7 @@ export class FortmaticWallet implements Wallet {
 
 	async disconnect(): Promise<void> {}
 
-	async supportChain(chainId: number): Promise<boolean> {
+	async connectable(chainId: number): Promise<boolean> {
 		const node = this.nodes.find(item => {
 			return item.chainId == chainId;
 		});
@@ -133,9 +133,5 @@ export class FortmaticWallet implements Wallet {
 
 	get name(): string {
 		return 'Fortmatic';
-	}
-
-	get description(): string {
-		return 'Connect to your fortmatic wallet';
 	}
 }

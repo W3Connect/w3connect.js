@@ -3,15 +3,13 @@ import "./assets/style.css";
 import { Provider, Wallet } from "@w3connect.js/wallet";
 import detectEthereumProvider from "@metamask/detect-provider";
 
-import { __ } from "i18n-for-browser";
-
 export class MetamaskWallet implements Wallet {
   // name: string = "MetaMask";
   // description: string = "Connect to you MetaMask wallet.";
 
   private provider?: Provider;
 
-  async connect(): Promise<Provider> {
+  async connectTo(chainId: number = 1): Promise<Provider> {
     await this.isValid();
 
     if (this.provider) {
@@ -26,11 +24,7 @@ export class MetamaskWallet implements Wallet {
     return "MetaMask";
   }
 
-  get description(): string {
-    return "Connect to you MetaMask wallet";
-  }
-
-  async supportChain(chainId: number): Promise<boolean> {
+  async connectable(chainId: number): Promise<boolean> {
     return true;
   }
 

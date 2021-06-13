@@ -3,6 +3,10 @@
   "workspaces": {
     "packages": [
       "packages/wallet",
+      "packages/core",
+      "package/fortmatic",
+      "package/metamask",
+      "packages/connect",
       "packages/*"
     ],
     "nohoist": []

@@ -14,6 +14,7 @@
 	},
 	"dependencies": {
 		"@w3connect.js/fortmatic": "1.0.0",
+		"@w3connect.js/core": "1.0.0",
 		"@w3connect.js/wallet": "1.0.0",
 		"@w3connect.js/metamask": "1.0.0",
 		"@w3connect.js/walletconnect": "1.0.0",

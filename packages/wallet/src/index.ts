@@ -29,15 +29,10 @@ export interface Wallet {
 	 * Wallet id name
 	 */
 	readonly name: string;
-
-	/**
-	 * Wallet description
-	 */
-	readonly description: string;
 	/**
 	 * Connect wallet and return EIP1193 compatible provider interface
 	 */
-	connect(chainId?: number): Promise<Provider>;
+	connectTo(chainId?: number): Promise<Provider>;
 
 	/**
 	 * Disconnect from wallet
@@ -45,8 +40,8 @@ export interface Wallet {
 	disconnect(): Promise<void>;
 
 	/**
-	 * Check wallet if support special chain using chainId
+	 * Check wallet if support connect to special chainId
 	 * @param chainId The test chainId
 	 */
-	supportChain(chainId: number): Promise<boolean>;
+	connectable(chainId: number): Promise<boolean>;
 }

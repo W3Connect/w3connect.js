@@ -17,9 +17,9 @@
 </template>
 
 <script lang="ts">
-import { Provider, Wallet } from '@w3connect.js/wallet';
+import { Wallet } from '@w3connect.js/wallet';
 import { computed, defineComponent, ref } from 'vue';
-import { makeConnect } from '../';
+import { setup } from '../';
 import { MetamaskWallet } from '@w3connect.js/metamask';
 import { FortmaticWallet } from '@w3connect.js/fortmatic';
 import { ethers } from 'ethers';
@@ -31,7 +31,7 @@ function sampleWallet(): Wallet[] {
 export default defineComponent({
 	name: 'App',
 	setup() {
-		const connect = makeConnect('#w3c', ...sampleWallet());
+		const connect = setup('#w3c', sampleWallet());
 
 		const disabled = ref(false);
 
@@ -60,7 +60,7 @@ export default defineComponent({
 
 			disabled.value = true;
 			try {
-				const provider = await connect.connect(3);
+				const provider = await connect.connectTo();
 
 				const client = new ethers.providers.Web3Provider(provider);
 

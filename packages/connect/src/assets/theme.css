@@ -1,54 +1,68 @@
-#w3c-modal {
+:root {
+	--w3c-stage-color: rgba(196, 190, 190, 0.37);
+	--w3c-dialog-backgroud: #ffffff;
+	--w3c-dialog-shadow: #bebbbb;
+	--w3c-accent: #111111;
+	--w3c-border: rgba(195, 195, 195, 0.14);
+	--w3c-menu-hover-background: #f7f7f7;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--w3c-stage-color: rgba(95, 95, 95, 0.37);
+		--w3c-dialog-backgroud: #2c2c2c;
+		--w3c-dialog-shadow: #1f1f1f;
+		--w3c-accent: #ececec;
+	}
+}
+
+#w3c-dialog-stage {
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: var(--w3c-stage-color);
+	backdrop-filter: blur(2px);
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
 	position: absolute;
-	z-index: 100;
-	background: rgba(80, 80, 80, 0.226);
+	z-index: 10000;
 	display: flex;
 	align-content: center;
 	align-items: center;
-	backdrop-filter: blur(2px);
 }
 
 #w3c-dialog {
-	background: #ffffff;
 	margin: auto;
+	width: 800px;
+	height: 600px;
+	background: var(--w3c-dialog-backgroud);
 	border-radius: 8px;
-	box-shadow: rgb(50 50 93 / 11%) 0px 4px 6px 0px,
-		rgb(0 0 0 / 8%) 0px 1px 3px 0px, rgb(0 0 0 / 6%) 0px 0px 1px 0px inset;
+	box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
 }
 
-.w3c-water-fall {
+#w3c-dialog-toolbar {
+	/* background: #1f1f1f; */
+	height: 10%;
+	border-bottom: 1px solid var(--w3c-border);
+}
+
+#w3c-dialog-home {
+	flex-grow: 1;
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(calc(50% - 10px), 1fr));
-	column-gap: 2px;
-	row-gap: 0px;
-	width: 800px;
-	min-height: 600px;
-	max-height: 90%;
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
 
-.w3c-water-fall-item {
+.w3c-button-menu {
 	width: 100%;
 	min-height: 160px;
 	border: 1px solid rgba(195, 195, 195, 0.14);
-}
-
-@media (max-width: 900px) {
-	.w3c-water-fall {
-		width: 90%;
-		height: 90%;
-		min-height: 0px;
-		grid-template-columns: 1fr;
-	}
-
-	.w3c-water-fall-item {
-		width: 100%;
-	}
 }
 
 .w3c-menu {
@@ -64,35 +78,15 @@
 }
 
 .w3c-menu:hover {
-	background: #f7f7f7;
+	background: var(--w3c-menu-hover-background);
 }
 
-.w3c-modal-enter-active,
-.w3c-modal-leave-active {
-	transition: all 0.2s ease-out;
-}
-
-.w3c-modal-enter-from {
-	opacity: 0.1;
-}
-
-.w3c-modal-leave-to {
-	opacity: 0;
-}
-
-.w3c-dialog-enter-active,
-.w3c-dialog-leave-active {
-	transition: all 0.2s ease-out;
-}
-
-.w3c-dialog-enter-from {
-	opacity: 0.1;
-	transform: translateY(100%);
-}
-
-.w3c-dialog-leave-to {
-	opacity: 0;
-	transform: translateY(100%);
+.w3c-menu-icon {
+	width: 100%;
+	height: 30%;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 .w3c-menu-title {
@@ -111,20 +105,49 @@
 	text-align: center;
 }
 
-@media (max-width: 40em) {
+@media (max-width: 900px) {
+	#w3c-dialog {
+		width: 80%;
+		height: 90%;
+	}
+
+	#w3c-dialog-home {
+		grid-template-columns: 1fr;
+	}
+
 	.w3c-menu-title {
-		font-size: 5vw;
+		font-size: 4vw;
 	}
 
 	.w3c-menu-description {
-		font-size: 4vw;
+		font-size: 3vw;
 	}
 }
 
-.w3c-menu-icon {
-	width: 100%;
-	height: 30%;
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
+.w3c-dialog-stage-enter-active,
+.w3c-dialog-stage-leave-active {
+	transition: all 0.2s ease-out;
+}
+
+.w3c-dialog-stage-enter-from {
+	opacity: 0.1;
+}
+
+.w3c-dialog-stage-leave-to {
+	opacity: 0;
+}
+
+.w3c-dialog-enter-active,
+.w3c-dialog-leave-active {
+	transition: all 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.w3c-dialog-enter-from {
+	opacity: 0.1;
+	transform: translateY(100%);
+}
+
+.w3c-dialog-leave-to {
+	opacity: 0;
+	transform: translateY(100%);
 }

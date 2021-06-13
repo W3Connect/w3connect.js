@@ -1,6 +1,10 @@
 <template>
 	<div id="w3c-dialog-home">
-		<div v-for="wallet in wallets" :key="wallet" class="w3c-button-menu">
+		<div
+			v-for="wallet in wallets"
+			:key="wallet.name"
+			class="w3c-button-menu"
+		>
 			<div
 				class="w3c-menu"
 				@click="clickMenu(wallet)"
@@ -41,7 +45,6 @@ export default defineComponent({
 		};
 
 		const valid = async (wallet: Wallet) => {
-			console.log('==========');
 			return await connect.connectable(wallet);
 		};
 

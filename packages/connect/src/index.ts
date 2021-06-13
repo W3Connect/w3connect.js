@@ -8,12 +8,12 @@ import router from './router';
 
 const builtinNetworks = [
 	{
-		name: 'eth',
-		chainId: 1,
-	},
-	{
 		name: 'bsc',
 		chainId: 56,
+	},
+	{
+		name: 'eth',
+		chainId: 1,
 	},
 ];
 
@@ -57,9 +57,10 @@ function mergeDeep(target: any, ...sources: any): any {
 export function setup(
 	containerOrSelector: Element | string,
 	wallets: Wallet[],
-	networks: Network[] = builtinNetworks,
+	networks: Network[] = [],
 	locales: any = {},
 ): Web3Connect {
+	networks.push(...builtinNetworks);
 	const connect = _setup(
 		wallets,
 		networks,

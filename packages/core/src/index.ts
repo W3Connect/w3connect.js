@@ -46,6 +46,16 @@ export interface Web3Connect {
 	readonly connecting: DeepReadonly<UnwrapNestedRefs<Ref<boolean>>>;
 
 	/**
+	 * The default network
+	 */
+	readonly network: DeepReadonly<UnwrapNestedRefs<Ref<Network>>>;
+
+	/**
+	 * Change default network
+	 */
+	changeNetwork(network: Network): Promise<void>;
+
+	/**
 	 * cancel connectTo procedure with Error
 	 */
 	cancelConnectTo(reason: Error): Promise<void>;
@@ -82,18 +92,56 @@ class Web3ConnectImpl implements Web3Connect {
 
 	private currentWallet?: Wallet;
 
-	private chainId?: number;
-
 	private locales: any;
+
+	private _network: Ref<Network>;
 
 	constructor(wallets: Wallet[], networks: Network[], locales: any) {
 		this.wallets = wallets;
 		this.networks = networks;
 		this.locales = locales;
+		this._network = ref(networks[0]);
+
+		const chainId = window.localStorage.getItem('chainId');
+
+		if (chainId) {
+			const network = networks.find(network => {
+				return network.chainId == parseInt(chainId);
+			});
+
+			if (network) {
+				this._network.value = network;
+			}
+		}
 	}
 
-	async connectTo(chainId: number = 1): Promise<Provider> {
-		this.chainId = chainId;
+	/**
+	 * The default network
+	 */
+	get network(): DeepReadonly<UnwrapNestedRefs<Ref<Network>>> {
+		return readonly(this._network);
+	}
+
+	/**
+	 * Change default network
+	 */
+	async changeNetwork(network: Network): Promise<void> {
+		this._network.value = network;
+		window.localStorage.setItem('chainId', `${network.chainId}`);
+	}
+
+	async connectTo(chainId?: number): Promise<Provider> {
+		if (chainId) {
+			const network = this.networks.find(network => {
+				return network.chainId == chainId;
+			});
+
+			if (network) {
+				this._network.value = network;
+			} else {
+				throw new Error(`Invalid chainId ${chainId}`);
+			}
+		}
 
 		this._connecting.value = true;
 
@@ -107,7 +155,9 @@ class Web3ConnectImpl implements Web3Connect {
 		this._connecting.value = false;
 
 		try {
-			const provider = await wallet.connectTo(this.chainId);
+			const provider = await wallet.connectTo(
+				this._network.value.chainId,
+			);
 			this.currentWallet = wallet;
 			if (this.resolve) {
 				this.resolve(provider);
@@ -138,7 +188,7 @@ class Web3ConnectImpl implements Web3Connect {
 	}
 
 	async connectable(wallet: Wallet): Promise<boolean> {
-		return await wallet.connectable(this.chainId ?? 1);
+		return await wallet.connectable(this._network.value.chainId);
 	}
 
 	localeString(key: string): string {

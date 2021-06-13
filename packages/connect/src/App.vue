@@ -10,7 +10,9 @@
 					<transition name="w3c-dialog">
 						<div id="w3c-dialog" v-if="showingDialog">
 							<tool-bar></tool-bar>
-							<component :is="Component" />
+							<transition name="w3c-router" mode="out-in">
+								<component :is="Component" />
+							</transition>
 						</div>
 					</transition>
 				</div>
@@ -20,9 +22,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect, nextTick } from 'vue';
+import { defineComponent, ref, watchEffect, nextTick, onMounted } from 'vue';
 import { useWeb3Connect } from '@w3connect.js/core';
 import ToolBar from './ToolBar.vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	name: 'W3ConnectDialog',
@@ -35,6 +38,12 @@ export default defineComponent({
 		const showingStage = ref(false);
 
 		const showingDialog = ref(false);
+
+		const router = useRouter();
+
+		onMounted(() => {
+			router.push('/');
+		});
 
 		watchEffect(() => {
 			if (connect.connecting.value) {

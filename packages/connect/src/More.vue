@@ -8,7 +8,7 @@
 			@click="select(network)"
 		>
 			<div class="w3c-network-item-icon" :class="logo(network)"></div>
-			<div>{{ network.name }}</div>
+			<div>{{ network.name.toUpperCase() }}</div>
 		</div>
 	</div>
 </template>

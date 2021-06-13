@@ -13,6 +13,12 @@
 							<transition name="w3c-router" mode="out-in">
 								<component :is="Component" />
 							</transition>
+							<a
+								id="w3-footer-bar"
+								href="https://github.com/W3Connect/w3connect.js"
+							>
+								This page powered by @web3connect.js
+							</a>
 						</div>
 					</transition>
 				</div>

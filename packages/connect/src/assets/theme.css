@@ -50,10 +50,34 @@
 	overflow: hidden;
 }
 
+#w3-footer-bar {
+	height: 40px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 2px 10px 2px 10px;
+	font-size: 12px;
+	font-weight: bold;
+	/* border-top: 1px solid var(--w3c-border); */
+}
+
+#w3-footer-bar:link {
+	color: var(--w3c-accent);
+}
+
+#w3-footer-bar:visited {
+	color: var(--w3c-accent);
+}
+
+#w3-footer-bar:active {
+	color: var(--w3c-accent);
+}
+
 #w3c-toolbar {
 	/* background: var(--w3c-toolbar); */
 	height: 40px;
-	border-bottom: 1px solid var(--w3c-border);
+	/* border-bottom: 1px solid var(--w3c-border); */
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -188,9 +212,11 @@
 }
 
 #w3c-networks {
-	margin: 20px;
+	flex-grow: 1;
+	padding: 20px;
 	display: flex;
 	flex-direction: column;
+	border: 1px solid var(--w3c-border);
 }
 
 .w3c-network-item-icon {
@@ -238,6 +264,10 @@
 
 	.w3c-menu-description {
 		font-size: 3vw;
+	}
+
+	#w3-footer-bar {
+		font-size: 10px;
 	}
 }
 

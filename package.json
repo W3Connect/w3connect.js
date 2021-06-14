@@ -15,5 +15,9 @@
   "scripts": {
     "test": "yarn workspaces run test",
     "build": "yarn workspaces run build"
+  },
+  "name": "w3connect.js",
+  "devDependencies": {
+    "lerna": "^4.0.0"
   }
 }

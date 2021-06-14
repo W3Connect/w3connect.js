@@ -28,7 +28,7 @@ export default defineComponent({
 		const wallets = ref(connect.wallets);
 
 		watchEffect(async () => {
-			if (connect.connecting.value) {
+			if (connect.state.value == 'prepare') {
 				const selected = connect.wallets.filter(async wallet => {
 					return await connect.connectable(wallet);
 				});
@@ -51,10 +51,6 @@ export default defineComponent({
 			return connect.localeString(`${wallet.name}-description`);
 		};
 
-		const valid = async (wallet: Wallet) => {
-			return await connect.connectable(wallet);
-		};
-
 		const clickMenu = async (wallet: Wallet) => {
 			try {
 				await connect.connectToWallet(wallet);
@@ -71,7 +67,6 @@ export default defineComponent({
 			icon,
 			wallets,
 			clickMenu,
-			valid,
 		};
 	},
 });

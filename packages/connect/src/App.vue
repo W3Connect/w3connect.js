@@ -47,23 +47,33 @@ export default defineComponent({
 
 		const router = useRouter();
 
-		onMounted(() => {
-			router.push('/');
-		});
-
 		watchEffect(() => {
-			if (connect.connecting.value) {
-				showingStage.value = connect.connecting.value;
+			switch (connect.state.value) {
+				case 'prepare': {
+					if (!showingStage.value) {
+						showingStage.value = true;
 
-				nextTick(() => {
-					showingDialog.value = connect.connecting.value;
-				});
-			} else {
-				showingDialog.value = connect.connecting.value;
+						nextTick(() => {
+							showingDialog.value = true;
+							router.push('/w3connect');
+						});
+					}
 
-				nextTick(() => {
-					showingStage.value = connect.connecting.value;
-				});
+					break;
+				}
+				case 'connecting': {
+					router.push('/w3connect/result');
+					break;
+				}
+				case 'closed': {
+					{
+						showingDialog.value = false;
+
+						nextTick(() => {
+							showingStage.value = false;
+						});
+					}
+				}
 			}
 		});
 

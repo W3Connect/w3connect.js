@@ -26,12 +26,7 @@ import { FortmaticWallet } from '@w3connect.js/fortmatic';
 import { ethers } from 'ethers';
 
 function sampleWallet(): Wallet[] {
-	return [
-		new MetamaskWallet(),
-		new FortmaticWallet(),
-		new MetamaskWallet(),
-		new MetamaskWallet(),
-	];
+	return [new MetamaskWallet(), new FortmaticWallet()];
 }
 
 export default defineComponent({

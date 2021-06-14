@@ -3,8 +3,9 @@ import './assets/theme.css';
 import { setup as _setup, Network, Web3Connect } from '@w3connect.js/core';
 import { Wallet } from '@w3connect.js/wallet';
 import App from './App.vue';
-import { createApp } from 'vue';
+import { createApp, watchEffect } from 'vue';
 import router from './router';
+import Vue from 'vue';
 
 const builtinNetworks = [
 	{
@@ -23,12 +24,14 @@ export const defaultLocales = {
 		'fortmatic-description': 'Login in fortmatic to using wallet',
 		metamask: 'MetaMask',
 		'metamask-description': 'Connect to Metamask wallet',
+		retry: 'RETRY',
 	},
 	'zh-CN': {
 		fortmatic: 'Fortmatic',
 		'fortmatic-description': '登录 "Fortmatic" 账号，使用钱包',
 		metamask: 'MetaMask',
 		'metamask-description': '点击连接 "Metamask" 钱包',
+		retry: '重试',
 	},
 };
 
@@ -53,6 +56,8 @@ function mergeDeep(target: any, ...sources: any): any {
 
 	return mergeDeep(target, ...sources);
 }
+
+let app: Vue.App<Element> | undefined;
 
 export function setup(
 	containerOrSelector: Element | string,

@@ -4,7 +4,7 @@
 
 		<div id="w3c-toolbar-title">{{ network.name.toUpperCase() }}</div>
 
-		<div id="w3c-toolbar-more-button" @click="more">
+		<div id="w3c-toolbar-more-button" @click="more" v-if="valid">
 			<div :id="moreButtonId"></div>
 		</div>
 	</div>
@@ -29,26 +29,32 @@ export default defineComponent({
 		const router = useRouter();
 
 		const moreButtonId = computed(() => {
-			if (router.currentRoute.value.path == '/') {
+			if (router.currentRoute.value.path == '/w3connect') {
 				return 'w3c-toolbar-more-button-icon';
 			} else {
 				return 'w3c-toolbar-home-button-icon';
 			}
 		});
 
-		const more = async () => {
-			if (router.currentRoute.value.path == '/more') {
-				await router.push('/');
+		const more = () => {
+			if (router.currentRoute.value.path == '/w3connect') {
+				router.push('/w3connect/more');
 			} else {
-				await router.push('/more');
+				router.push('/w3connect');
 			}
 		};
+
+		const valid = computed(() => {
+			console.log('calc valid', connect.state.value);
+			return connect.state.value != 'connecting';
+		});
 
 		return {
 			network,
 			logo,
 			more,
 			moreButtonId,
+			valid,
 		};
 	},
 });

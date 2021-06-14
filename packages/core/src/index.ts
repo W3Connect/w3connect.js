@@ -5,10 +5,14 @@ import {
 	UnwrapNestedRefs,
 	Ref,
 	DeepReadonly,
+	isProxy,
+	toRaw,
 } from '@vue/reactivity';
 
 import { Wallet, Provider } from '@w3connect.js/wallet';
 import { type } from 'os';
+
+export type State = 'prepare' | 'connecting' | 'result' | 'closed';
 
 /**
  * The w3connect support chain network object
@@ -41,14 +45,24 @@ export interface Web3Connect {
 	readonly networks: Array<Network>;
 
 	/**
-	 * Connecting status reactive attribute
+	 * Connect State
 	 */
-	readonly connecting: DeepReadonly<UnwrapNestedRefs<Ref<boolean>>>;
+	readonly state: DeepReadonly<UnwrapNestedRefs<Ref<State>>>;
 
 	/**
 	 * The default network
 	 */
 	readonly network: DeepReadonly<UnwrapNestedRefs<Ref<Network>>>;
+
+	/**
+	 * Currenct connecting wallet
+	 */
+	readonly wallet: DeepReadonly<UnwrapNestedRefs<Ref<Wallet | undefined>>>;
+
+	/**
+	 * The last error readonly reactivity object
+	 */
+	readonly lastError: DeepReadonly<UnwrapNestedRefs<Ref<Error | undefined>>>;
 
 	/**
 	 * Change default network
@@ -84,17 +98,19 @@ class Web3ConnectImpl implements Web3Connect {
 
 	networks: Network[];
 
-	private _connecting = ref(false);
+	private _lastError: Ref<Error | undefined> = ref();
+
+	private _currentWallet: Ref<Wallet | undefined> = ref();
 
 	private resolve?: (value: Provider | PromiseLike<Provider>) => void;
 
 	private reject?: (reason?: any) => void;
 
-	private currentWallet?: Wallet;
-
 	private locales: any;
 
 	private _network: Ref<Network>;
+
+	private _state: Ref<State> = ref('closed');
 
 	constructor(wallets: Wallet[], networks: Network[], locales: any) {
 		this.wallets = wallets;
@@ -115,6 +131,14 @@ class Web3ConnectImpl implements Web3Connect {
 		}
 	}
 
+	get wallet(): DeepReadonly<UnwrapNestedRefs<Ref<Wallet | undefined>>> {
+		return readonly(this._currentWallet);
+	}
+
+	get lastError(): DeepReadonly<UnwrapNestedRefs<Ref<Error | undefined>>> {
+		return readonly(this._lastError);
+	}
+
 	/**
 	 * The default network
 	 */
@@ -122,6 +146,9 @@ class Web3ConnectImpl implements Web3Connect {
 		return readonly(this._network);
 	}
 
+	get state(): DeepReadonly<UnwrapNestedRefs<Ref<State>>> {
+		return readonly(this._state);
+	}
 	/**
 	 * Change default network
 	 */
@@ -131,6 +158,9 @@ class Web3ConnectImpl implements Web3Connect {
 	}
 
 	async connectTo(chainId?: number): Promise<Provider> {
+		this._currentWallet.value = undefined;
+		this._state.value = 'prepare';
+
 		if (chainId) {
 			const network = this.networks.find(network => {
 				return network.chainId == chainId;
@@ -143,8 +173,6 @@ class Web3ConnectImpl implements Web3Connect {
 			}
 		}
 
-		this._connecting.value = true;
-
 		return new Promise<Provider>((resolve, reject) => {
 			this.reject = reject;
 			this.resolve = resolve;
@@ -152,42 +180,51 @@ class Web3ConnectImpl implements Web3Connect {
 	}
 
 	async connectToWallet(wallet: Wallet): Promise<void> {
-		this._connecting.value = false;
+		if (isProxy(wallet)) {
+			wallet = toRaw(wallet);
+		}
 
 		try {
+			this._lastError.value = undefined;
+
+			this._currentWallet.value = wallet;
+
+			this._state.value = 'connecting';
+
 			const provider = await wallet.connectTo(
 				this._network.value.chainId,
 			);
-			this.currentWallet = wallet;
-			if (this.resolve) {
+
+			if (this.resolve && this._state.value == 'connecting') {
 				this.resolve(provider);
 			}
+
+			this._state.value = 'closed';
 		} catch (error) {
-			if (this.reject) {
-				this.reject(error);
-			}
+			this._lastError.value = error as Error;
+			this._state.value = 'result';
 		}
 	}
 
 	async disconnect(): Promise<void> {
-		await this.currentWallet?.disconnect();
-	}
-
-	get connecting(): DeepReadonly<UnwrapNestedRefs<Ref<boolean>>> {
-		return readonly(this._connecting);
+		await this._currentWallet.value?.disconnect();
 	}
 
 	async cancelConnectTo(reason: Error): Promise<void> {
 		if (this.reject) {
 			this.reject(reason);
 		} else {
-			console.error(reason);
+			this._lastError.value = reason;
 		}
 
-		this._connecting.value = false;
+		this._state.value = 'closed';
 	}
 
 	async connectable(wallet: Wallet): Promise<boolean> {
+		if (isProxy(wallet)) {
+			wallet = toRaw(wallet);
+		}
+
 		return await wallet.connectable(this._network.value.chainId);
 	}
 

@@ -37,7 +37,7 @@ export default defineComponent({
 
 		const select = async (network: Network) => {
 			await connect.changeNetwork(network);
-			router.push('/');
+			router.push('/w3connect');
 		};
 
 		const selected = (target: Network) => {

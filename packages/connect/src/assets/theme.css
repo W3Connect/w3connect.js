@@ -7,7 +7,7 @@
 	--w3c-menu-hover-background: #f7f7f7;
 	--w3c-description-color: rgb(169, 169, 188);
 	--w3c-toolbar: #2c2c2c;
-	--w3c-primary: rgb(114, 219, 27);
+	--w3c-primary: rgb(40, 106, 182);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -33,12 +33,12 @@
 	position: absolute;
 	z-index: 10000;
 	display: flex;
-	align-content: center;
+	flex-direction: column;
+	justify-content: center;
 	align-items: center;
 }
 
 #w3c-dialog {
-	margin: auto;
 	width: 800px;
 	height: 600px;
 	background: var(--w3c-dialog-backgroud);
@@ -51,7 +51,7 @@
 }
 
 #w3-footer-bar {
-	height: 40px;
+	min-height: 40px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -165,21 +165,15 @@
 	overflow-x: hidden;
 }
 
-.w3c-button-menu {
+.w3c-menu {
 	width: 100%;
 	min-height: 160px;
 	border: 1px solid rgba(195, 195, 195, 0.14);
-}
-
-.w3c-menu {
-	width: calc(100% - 20px);
-	height: calc(100% - 20px);
 	transition: all 0.2s linear;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 10px;
 	cursor: pointer;
 }
 
@@ -189,7 +183,7 @@
 
 .w3c-menu-icon {
 	width: 100%;
-	height: 30%;
+	min-height: 40px;
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -251,8 +245,13 @@
 
 @media (max-width: 900px) {
 	#w3c-dialog {
-		width: 80%;
-		height: 90%;
+		width: 100%;
+		height: 80%;
+		border-radius: 8px 8px 0px 0px;
+	}
+
+	.w3c-menu {
+		min-height: 140px;
 	}
 
 	#w3c-dialog-home {
@@ -261,15 +260,19 @@
 	}
 
 	.w3c-menu-title {
-		font-size: 4vw;
+		font-size: 20px;
 	}
 
 	.w3c-menu-description {
-		font-size: 3vw;
+		font-size: 16px;
 	}
 
 	#w3-footer-bar {
 		font-size: 10px;
+	}
+
+	#w3c-dialog-stage {
+		justify-content: flex-end;
 	}
 }
 

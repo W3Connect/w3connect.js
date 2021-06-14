@@ -3,25 +3,20 @@
 		<div
 			v-for="wallet in wallets"
 			:key="wallet.name"
-			class="w3c-button-menu"
+			class="w3c-menu"
+			@click="clickMenu(wallet)"
 		>
-			<div
-				class="w3c-menu"
-				@click="clickMenu(wallet)"
-				v-if="valid(wallet)"
-			>
-				<div class="w3c-menu-icon" :class="icon(wallet)"></div>
-				<a class="w3c-menu-title">{{ name(wallet) }}</a>
-				<a class="w3c-menu-description">
-					{{ description(wallet) }}
-				</a>
-			</div>
+			<div class="w3c-menu-icon" :class="icon(wallet)"></div>
+			<a class="w3c-menu-title">{{ name(wallet) }}</a>
+			<a class="w3c-menu-description">
+				{{ description(wallet) }}
+			</a>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, Ref, ref, watchEffect } from 'vue';
 import { useWeb3Connect } from '@w3connect.js/core';
 import { Wallet } from '@w3connect.js/wallet';
 
@@ -30,7 +25,19 @@ export default defineComponent({
 	setup() {
 		const connect = useWeb3Connect();
 
-		const wallets = connect.wallets;
+		const wallets = ref(connect.wallets);
+
+		watchEffect(async () => {
+			if (connect.connecting.value) {
+				const selected = connect.wallets.filter(async wallet => {
+					return await connect.connectable(wallet);
+				});
+
+				wallets.value = selected;
+
+				console.log(wallets.value);
+			}
+		});
 
 		const icon = (wallet: Wallet) => {
 			return `w3c-menu-${wallet.name.toLowerCase()}-icon`;

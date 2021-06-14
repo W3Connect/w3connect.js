@@ -17,6 +17,6 @@
   },
   "dependencies": {
     "@metamask/detect-provider": "^1.2.0",
-    "@w3connect.js/wallet": "1.0.0"
+    "@w3connect.js/wallet": "^1.0.0"
   }
 }

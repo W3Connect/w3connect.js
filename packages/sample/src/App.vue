@@ -20,7 +20,8 @@
 <script lang="ts">
 import { Wallet } from '@w3connect.js/wallet';
 import { computed, defineComponent, ref } from 'vue';
-import { setup } from '../';
+import { setup } from 'w3connect.js';
+import 'w3connect.js/dist/style.css';
 import { MetamaskWallet } from '@w3connect.js/metamask';
 import { FortmaticWallet } from '@w3connect.js/fortmatic';
 import { ethers } from 'ethers';

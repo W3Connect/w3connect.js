@@ -161,6 +161,8 @@ class Web3ConnectImpl implements Web3Connect {
 		this._currentWallet.value = undefined;
 		this._state.value = 'prepare';
 
+		console.log('state changed:', this._state.value);
+
 		if (chainId) {
 			const network = this.networks.find(network => {
 				return network.chainId == chainId;

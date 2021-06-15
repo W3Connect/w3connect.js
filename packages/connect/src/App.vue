@@ -53,6 +53,7 @@ export default defineComponent({
 		provide('contentIs', contentIs);
 
 		watchEffect(() => {
+			console.log('state', connect.state.value);
 			switch (connect.state.value) {
 				case 'prepare': {
 					if (!showingStage.value) {

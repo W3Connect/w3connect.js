@@ -8,16 +8,11 @@ export default defineConfig({
 	plugins: [vue()],
 	build: {
 		emptyOutDir: true,
-		minify: true,
-		// assetsInlineLimit: 100000000,
-		// chunkSizeWarningLimit: 100000000,
 		lib: {
 			entry: resolve(__dirname, 'src/index.ts'),
-			name: 'blockinsight.js',
 			formats: ['es', 'cjs'],
+			fileName: 'index',
 		},
-		rollupOptions: {
-			external: ['vue'],
-		},
+		rollupOptions: {},
 	},
 });

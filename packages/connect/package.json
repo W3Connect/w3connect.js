@@ -1,13 +1,14 @@
 {
-	"name": "web3connect.js",
+	"name": "w3connect.js",
 	"version": "1.0.0",
 	"files": [
 		"dist"
 	],
-	"main": "./dist/ui.cjs.js",
-	"module": "./dist/ui.es.js",
+	"main": "./dist/index.cjs.js",
+	"module": "./dist/index.es.js",
 	"types": "./dist/index.d.ts",
 	"scripts": {
+		"dev": "vite --port 8080",
 		"build": "vue-tsc -noEmit && vite build && tsc --project tsconfig.dec.json"
 	},
 	"dependencies": {

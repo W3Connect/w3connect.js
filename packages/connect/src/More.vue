@@ -14,11 +14,8 @@
 </template>
 
 <script lang="ts">
-import { nextTick, defineComponent } from 'vue';
+import { defineComponent, inject, Ref } from 'vue';
 import { useWeb3Connect, Network } from '@w3connect.js/core';
-import { Wallet } from '@w3connect.js/wallet';
-import { useRouter } from 'vue-router';
-import { setTimeout } from 'timers';
 
 export default defineComponent({
 	name: 'Web3ConnectMore',
@@ -29,15 +26,15 @@ export default defineComponent({
 
 		const network = connect.network;
 
-		const router = useRouter();
-
 		const logo = (network: Network) => {
 			return `w3c-toolbar-${network.name}-logo`;
 		};
 
+		const contentIs = inject('contentIs') as Ref<string>;
+
 		const select = async (network: Network) => {
 			await connect.changeNetwork(network);
-			router.push('/w3connect');
+			contentIs.value = 'home';
 		};
 
 		const selected = (target: Network) => {

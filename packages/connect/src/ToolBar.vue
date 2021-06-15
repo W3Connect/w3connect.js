@@ -11,9 +11,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, inject, Ref } from 'vue';
 import { useWeb3Connect } from '@w3connect.js/core';
-import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	name: 'Web3ConnectToolBar',
@@ -22,14 +21,14 @@ export default defineComponent({
 
 		const network = connect.network;
 
+		const contentIs = inject('contentIs') as Ref<string>;
+
 		const logo = computed(() => {
 			return `w3c-toolbar-${network.value.name}-logo`;
 		});
 
-		const router = useRouter();
-
 		const moreButtonId = computed(() => {
-			if (router.currentRoute.value.path == '/w3connect') {
+			if (contentIs.value == 'home') {
 				return 'w3c-toolbar-more-button-icon';
 			} else {
 				return 'w3c-toolbar-home-button-icon';
@@ -37,10 +36,10 @@ export default defineComponent({
 		});
 
 		const more = () => {
-			if (router.currentRoute.value.path == '/w3connect') {
-				router.push('/w3connect/more');
+			if (contentIs.value == 'home') {
+				contentIs.value = 'more';
 			} else {
-				router.push('/w3connect');
+				contentIs.value = 'home';
 			}
 		};
 

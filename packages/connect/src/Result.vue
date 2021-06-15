@@ -20,8 +20,6 @@
 import { computed, defineComponent, ref, watchEffect } from 'vue';
 import { useWeb3Connect, Network } from '@w3connect.js/core';
 import { Wallet } from '@w3connect.js/wallet';
-import { useRouter } from 'vue-router';
-import { watchFile } from 'fs';
 
 export default defineComponent({
 	name: 'Web3ConnectResult',
@@ -36,14 +34,6 @@ export default defineComponent({
 
 		const showingError = computed(() => {
 			return connect.lastError.value != undefined;
-		});
-
-		const router = useRouter();
-
-		watchEffect(() => {
-			if (!connect.wallet.value) {
-				router.push('/w3connect');
-			}
 		});
 
 		const icon = () => {

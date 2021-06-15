@@ -1,42 +1,45 @@
 <template>
 	<teleport to="body">
-		<router-view v-slot="{ Component }">
-			<transition name="w3c-dialog-stage">
-				<div
-					id="w3c-dialog-stage"
-					v-if="showingStage"
-					@click.self="dismiss"
-				>
-					<transition name="w3c-dialog">
-						<div id="w3c-dialog" v-if="showingDialog">
-							<tool-bar></tool-bar>
-							<transition name="w3c-router" mode="out-in">
-								<component :is="Component" />
-							</transition>
-							<a
-								id="w3-footer-bar"
-								href="https://github.com/W3Connect/w3connect.js"
-							>
-								This page powered by @web3connect.js
-							</a>
-						</div>
-					</transition>
-				</div>
-			</transition>
-		</router-view>
+		<transition name="w3c-dialog-stage">
+			<div
+				id="w3c-dialog-stage"
+				v-if="showingStage"
+				@click.self="dismiss"
+			>
+				<transition name="w3c-dialog">
+					<div id="w3c-dialog" v-if="showingDialog">
+						<tool-bar></tool-bar>
+						<transition name="w3c-router" mode="out-in">
+							<component :is="contentIs" />
+						</transition>
+						<a
+							id="w3-footer-bar"
+							href="https://github.com/W3Connect/w3connect.js"
+						>
+							This page powered by @web3connect.js
+						</a>
+					</div>
+				</transition>
+			</div>
+		</transition>
 	</teleport>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect, nextTick, onMounted } from 'vue';
+import { defineComponent, ref, watchEffect, nextTick, provide } from 'vue';
 import { useWeb3Connect } from '@w3connect.js/core';
 import ToolBar from './ToolBar.vue';
-import { useRouter } from 'vue-router';
+import Home from './Home.vue';
+import More from './More.vue';
+import Result from './Result.vue';
 
 export default defineComponent({
 	name: 'W3ConnectDialog',
 	components: {
 		ToolBar,
+		Home,
+		More,
+		Result,
 	},
 	setup() {
 		const connect = useWeb3Connect();
@@ -45,7 +48,9 @@ export default defineComponent({
 
 		const showingDialog = ref(false);
 
-		const router = useRouter();
+		const contentIs = ref('home');
+
+		provide('contentIs', contentIs);
 
 		watchEffect(() => {
 			switch (connect.state.value) {
@@ -55,14 +60,14 @@ export default defineComponent({
 
 						nextTick(() => {
 							showingDialog.value = true;
-							router.push('/w3connect');
+							contentIs.value = 'home';
 						});
 					}
 
 					break;
 				}
 				case 'connecting': {
-					router.push('/w3connect/result');
+					contentIs.value = 'result';
 					break;
 				}
 				case 'closed': {
@@ -85,6 +90,7 @@ export default defineComponent({
 			showingStage,
 			showingDialog,
 			dismiss,
+			contentIs,
 		};
 	},
 });

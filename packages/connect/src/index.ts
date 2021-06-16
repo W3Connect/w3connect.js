@@ -1,20 +1,10 @@
 import './assets/theme.css';
 
-import { setup as _setup, Network, Web3Connect } from '@w3connect.js/core';
+import { setup as _setup, Web3Connect } from '@w3connect.js/core';
+import { Chain } from '@w3connect.js/chainlist';
 import { Wallet } from '@w3connect.js/wallet';
 import App from './App.vue';
 import { createApp } from 'vue';
-
-const builtinNetworks = [
-	{
-		name: 'bsc',
-		chainId: 56,
-	},
-	{
-		name: 'eth',
-		chainId: 1,
-	},
-];
 
 export const defaultLocales = {
 	en: {
@@ -55,17 +45,16 @@ function mergeDeep(target: any, ...sources: any): any {
 	return mergeDeep(target, ...sources);
 }
 
-export function setup(
+export async function setup(
 	containerOrSelector: Element | string,
 	wallets: Wallet[],
-	networks: Network[] = [],
 	locales: any = {},
-): Web3Connect {
-	networks.push(...builtinNetworks);
-	const connect = _setup(
+	chains?: Chain[],
+): Promise<Web3Connect> {
+	const connect = await _setup(
 		wallets,
-		networks,
 		mergeDeep(locales, defaultLocales),
+		chains,
 	);
 
 	createApp(App).mount(containerOrSelector);

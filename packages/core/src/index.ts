@@ -10,7 +10,7 @@ import {
 } from '@vue/reactivity';
 
 import { Wallet, Provider } from '@w3connect.js/wallet';
-import { type } from 'os';
+import { Chain, fromURL } from '@w3connect.js/chainlist';
 
 export type State = 'prepare' | 'connecting' | 'result' | 'closed';
 
@@ -42,7 +42,7 @@ export interface Web3Connect {
 	/**
 	 * Support web3 networks
 	 */
-	readonly networks: Array<Network>;
+	readonly chains: Array<Chain>;
 
 	/**
 	 * Connect State
@@ -52,7 +52,7 @@ export interface Web3Connect {
 	/**
 	 * The default network
 	 */
-	readonly network: DeepReadonly<UnwrapNestedRefs<Ref<Network>>>;
+	readonly chain: DeepReadonly<UnwrapNestedRefs<Ref<Chain>>>;
 
 	/**
 	 * Currenct connecting wallet
@@ -67,7 +67,7 @@ export interface Web3Connect {
 	/**
 	 * Change default network
 	 */
-	changeNetwork(network: Network): Promise<void>;
+	changeNetwork(chain: Chain): Promise<void>;
 
 	/**
 	 * cancel connectTo procedure with Error
@@ -96,7 +96,7 @@ export interface Web3Connect {
 class Web3ConnectImpl implements Web3Connect {
 	wallets: Wallet[];
 
-	networks: Network[];
+	chains: Chain[];
 
 	private _lastError: Ref<Error | undefined> = ref();
 
@@ -108,25 +108,25 @@ class Web3ConnectImpl implements Web3Connect {
 
 	private locales: any;
 
-	private _network: Ref<Network>;
+	private _chain: Ref<Chain>;
 
 	private _state: Ref<State> = ref('closed');
 
-	constructor(wallets: Wallet[], networks: Network[], locales: any) {
+	constructor(wallets: Wallet[], locales: any, chains: Chain[]) {
 		this.wallets = wallets;
-		this.networks = networks;
+		this.chains = chains;
 		this.locales = locales;
-		this._network = ref(networks[0]);
+		this._chain = ref(chains[0]);
 
 		const chainId = window.localStorage.getItem('chainId');
 
 		if (chainId) {
-			const network = networks.find(network => {
-				return network.chainId == parseInt(chainId);
+			const chain = chains.find(chain => {
+				return chain.chainId == parseInt(chainId);
 			});
 
-			if (network) {
-				this._network.value = network;
+			if (chain) {
+				this._chain.value = chain;
 			}
 		}
 	}
@@ -142,8 +142,8 @@ class Web3ConnectImpl implements Web3Connect {
 	/**
 	 * The default network
 	 */
-	get network(): DeepReadonly<UnwrapNestedRefs<Ref<Network>>> {
-		return readonly(this._network);
+	get chain(): DeepReadonly<UnwrapNestedRefs<Ref<Chain>>> {
+		return readonly(this._chain);
 	}
 
 	get state(): DeepReadonly<UnwrapNestedRefs<Ref<State>>> {
@@ -152,9 +152,9 @@ class Web3ConnectImpl implements Web3Connect {
 	/**
 	 * Change default network
 	 */
-	async changeNetwork(network: Network): Promise<void> {
-		this._network.value = network;
-		window.localStorage.setItem('chainId', `${network.chainId}`);
+	async changeNetwork(chain: Chain): Promise<void> {
+		this._chain.value = chain;
+		window.localStorage.setItem('chainId', `${chain.chainId}`);
 	}
 
 	async connectTo(chainId?: number): Promise<Provider> {
@@ -164,12 +164,12 @@ class Web3ConnectImpl implements Web3Connect {
 		console.log('state changed:', this._state.value);
 
 		if (chainId) {
-			const network = this.networks.find(network => {
+			const network = this.chains.find(network => {
 				return network.chainId == chainId;
 			});
 
 			if (network) {
-				this._network.value = network;
+				this._chain.value = network;
 			} else {
 				throw new Error(`Invalid chainId ${chainId}`);
 			}
@@ -193,9 +193,7 @@ class Web3ConnectImpl implements Web3Connect {
 
 			this._state.value = 'connecting';
 
-			const provider = await wallet.connectTo(
-				this._network.value.chainId,
-			);
+			const provider = await wallet.connectTo(this._chain.value.chainId);
 
 			if (this.resolve && this._state.value == 'connecting') {
 				this.resolve(provider);
@@ -227,7 +225,7 @@ class Web3ConnectImpl implements Web3Connect {
 			wallet = toRaw(wallet);
 		}
 
-		return await wallet.connectable(this._network.value.chainId);
+		return await wallet.connectable(this._chain.value.chainId);
 	}
 
 	localeString(key: string): string {
@@ -258,12 +256,16 @@ class Web3ConnectImpl implements Web3Connect {
 
 let instance: Web3Connect | undefined;
 
-export function setup(
+export async function setup(
 	wallets: Wallet[],
-	networks: Network[],
 	locales: any,
-): Web3Connect {
-	instance = new Web3ConnectImpl(wallets, networks, locales);
+	chains?: Chain[],
+): Promise<Web3Connect> {
+	if (!chains) {
+		chains = await fromURL();
+	}
+
+	instance = new Web3ConnectImpl(wallets, locales, chains);
 
 	return instance;
 }

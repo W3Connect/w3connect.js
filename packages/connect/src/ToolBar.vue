@@ -1,8 +1,9 @@
 <template>
 	<div id="w3c-toolbar">
-		<div id="w3c-toolbar-logo" :class="logo"></div>
+		<img id="w3c-toolbar-logo" v-if="chain.icon" />
+		<div id="w3c-toolbar-logo" class="w3c-chain-icon-default" v-else></div>
 
-		<div id="w3c-toolbar-title">{{ network.name.toUpperCase() }}</div>
+		<div id="w3c-toolbar-title">{{ chain.name.toUpperCase() }}</div>
 
 		<div id="w3c-toolbar-more-button" @click="more" v-if="valid">
 			<div :id="moreButtonId"></div>
@@ -19,12 +20,12 @@ export default defineComponent({
 	setup() {
 		const connect = useWeb3Connect();
 
-		const network = connect.network;
+		const chain = connect.chain;
 
 		const contentIs = inject('contentIs') as Ref<string>;
 
 		const logo = computed(() => {
-			return `w3c-toolbar-${network.value.name}-logo`;
+			return `w3c-toolbar-${chain.value.shortName}-logo`;
 		});
 
 		const moreButtonId = computed(() => {
@@ -49,7 +50,7 @@ export default defineComponent({
 		});
 
 		return {
-			network,
+			chain,
 			logo,
 			more,
 			moreButtonId,
